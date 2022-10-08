@@ -1,0 +1,14 @@
+.legend {
+  display: flex;
+  justify-content: space-between;
+
+  &__elem {
+    display: flex;
+    align-items: center;
+
+    p {
+      font-size: 12px;
+      margin-left: 4px;
+    }
+  }
+}

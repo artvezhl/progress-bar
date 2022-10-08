@@ -1,25 +1,16 @@
-import React, {FC, useEffect, useState} from "react";
+import React, { FC, useEffect, useState } from "react";
 
+import s from "./ProgressBar.module.scss";
 import Bar from "../UI/Bar";
+import { IBar } from "../../models";
+import Legend from "../Legend/Legend";
+import {getBarTotal, getModifiedData} from "../../utils";
 import { barWidth, barGap } from "../../data/constants";
 
 interface IProgressBarProps {
-    data: Array<{
-        name: string,
-        color: string,
-        value: number
-    }>,
+    data: Array<IBar>,
     width: number,
     height: number
-}
-
-interface IBar {
-    name: string,
-    color: string,
-    value: number,
-    id?: string,
-    percentage: number,
-    barCount: number
 }
 
 const ProgressBar: FC<IProgressBarProps> = ({
@@ -33,46 +24,36 @@ const ProgressBar: FC<IProgressBarProps> = ({
 
     useEffect(() => {
         setBarCount(Math.round(width/(barWidth + barGap)));
-        let total = 0;
-        data.forEach((el, i) => {
-            total += el.value;
-            data.length - 1 === i && setTotalValue(total);
-        });
-    }, [width, data]);
+        setTotalValue(getBarTotal(data));
+        setArrayOfBars(getModifiedData(data, totalValue, barCount));
+    }, [width, data, totalValue, barCount]);
 
-    useEffect(() => {
-        const result = data.map((el) => ({
-                ...el,
-                percentage: Math.floor((el.value/totalValue) * 100),
-                barCount: Math.ceil((barCount * (el.value/totalValue) * 100)/100)
-            })
-        );
-        setArrayOfBars(result);
-    }, [data, totalValue])
+    // useEffect(() => {
+    //
+    // }, [data, totalValue, barCount])
 
     return (
-        <div style={{ display: "flex", gap: "2px", width: width, height: "50px"}}>
-            {
-                arrayOfBars.map((el) => {
-                    console.log('id', el.id)
-                    console.log('percentage', el.percentage)
-                    console.log('barCount', el.barCount)
-                    console.log('totalCount', barCount)
-                    console.log("==========================")
+        <section className={s.pb}>
+            <div className={s.pb__bar} style={{ gap: barGap, width: width }}>
+                {
+                    arrayOfBars.map((el) => {
+                        const resultArray: Array<IBar> = [];
+                        if (el.barCount) {
+                            for (let i = el.barCount; i > 0; i --) {
+                                resultArray.push({
+                                    ...el,
+                                    id: String(Date.now() * Math.random())
+                                })
+                            }
 
-                    const resultArray: Array<IBar> = [];
-
-                    for (let i = el.barCount; i > 0; i --) {
-                        resultArray.push({
-                            ...el,
-                            id: String(Date.now() * Math.random())
-                        })
-                    }
-
-                    return resultArray.map((el) => (<Bar key={el.id} color={el.color} height={height} />))
-                })
-            }
-        </div>
+                            return resultArray.map((el) => (<Bar key={el.id} color={el.color} height={height} />))
+                        }
+                        return null;
+                    })
+                }
+            </div>
+            <Legend data={arrayOfBars} />
+        </section>
     );
 };
 
