@@ -5,6 +5,11 @@
   &__elem {
     display: flex;
     align-items: center;
+    margin-right: 8px;
+
+    &:last-of-type {
+      margin: 0;
+    }
 
     p {
       font-size: 12px;

@@ -1,4 +1,8 @@
 .pb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   &__bar {
     display: flex;
   }

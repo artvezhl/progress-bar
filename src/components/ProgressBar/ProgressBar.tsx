@@ -28,10 +28,6 @@ const ProgressBar: FC<IProgressBarProps> = ({
         setArrayOfBars(getModifiedData(data, totalValue, barCount));
     }, [width, data, totalValue, barCount]);
 
-    // useEffect(() => {
-    //
-    // }, [data, totalValue, barCount])
-
     return (
         <section className={s.pb}>
             <div className={s.pb__bar} style={{ gap: barGap, width: width }}>

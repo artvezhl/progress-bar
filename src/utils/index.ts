@@ -13,7 +13,7 @@ export const getBarTotal = (data: Array<IBar>): number => {
 export const getModifiedData = (data: Array<IBar>, total: number, count: number): Array<IBar> => {
     const result = data.map((el) => ({
             ...el,
-            percentage: Math.floor((el.value/total) * 100),
+            percentage: +((el.value/total) * 100).toFixed(2),
             barCount: Math.ceil((count * (el.value/total) * 100)/100)
         })
     );
